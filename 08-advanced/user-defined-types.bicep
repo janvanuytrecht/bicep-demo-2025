@@ -11,15 +11,7 @@ type databaseSettings = {
   databaseName: string
 
   @description('SKU tier of the database')
-  @allowed([
-    'Basic'
-    'Standard'
-    'Premium'
-    'GeneralPurpose'
-    'BusinessCritical'
-    'Hyperscale'
-  ])
-  skuTier: string
+  skuTier: 'Basic' | 'Standard' | 'Premium' | 'GeneralPurpose' | 'BusinessCritical' | 'Hyperscale'
 
   @description('SKU name of the database')
   skuName: string
@@ -36,9 +28,7 @@ type databaseSettings = {
   highAvailability: bool
 
   @description('Tags for the resource')
-  tags: {
-    [string]: string
-  }
+  tags: object
 }
 
 // Define a user-defined type for virtual networks
@@ -52,53 +42,49 @@ type vnetSettings = {
   addressPrefixes: string[]
 
   @description('Subnets to create in the virtual network')
-  subnets: {
-    @description('Name of the subnet')
-    name: string
+  subnets: subnetSettings[]
+}
 
-    @description('Address prefix for the subnet')
-    addressPrefix: string
+type subnetSettings = {
+  @description('Name of the subnet')
+  name: string
 
-    @description('Security rules for the subnet')
-    securityRules?: {
-      @description('Name of the security rule')
-      name: string
+  @description('Address prefix for the subnet')
+  addressPrefix: string
 
-      @description('Priority of the security rule')
-      @minValue(100)
-      @maxValue(4096)
-      priority: int
+  @description('Security rules for the subnet')
+  securityRules: securityRuleSettings[]?
+}
 
-      @description('Type of traffic to allow or deny')
-      @allowed([
-        'Inbound'
-        'Outbound'
-      ])
-      direction: string
+type securityRuleSettings = {
+  @description('Name of the security rule')
+  name: string
 
-      @description('Action to take')
-      @allowed([
-        'Allow'
-        'Deny'
-      ])
-      access: string
+  @description('Priority of the security rule')
+  @minValue(100)
+  @maxValue(4096)
+  priority: int
 
-      @description('Protocol to apply rule to')
-      protocol: string
+  @description('Type of traffic to allow or deny')
+  direction: 'Inbound' | 'Outbound'
 
-      @description('Source address prefix')
-      sourceAddressPrefix: string
+  @description('Action to take')
+  access: 'Allow' | 'Deny'
 
-      @description('Destination address prefix')
-      destinationAddressPrefix: string
+  @description('Protocol to apply rule to')
+  protocol: string
 
-      @description('Source port range')
-      sourcePortRange: string
+  @description('Source address prefix')
+  sourceAddressPrefix: string
 
-      @description('Destination port range')
-      destinationPortRange: string
-    }[]
-  }[]
+  @description('Destination address prefix')
+  destinationAddressPrefix: string
+
+  @description('Source port range')
+  sourcePortRange: string
+
+  @description('Destination port range')
+  destinationPortRange: string
 }
 
 // User-defined type for Application Gateway settings
@@ -108,25 +94,10 @@ type appGatewaySettings = {
   name: string
 
   @description('SKU name')
-  @allowed([
-    'Standard_Small'
-    'Standard_Medium'
-    'Standard_Large'
-    'WAF_Medium'
-    'WAF_Large'
-    'Standard_v2'
-    'WAF_v2'
-  ])
-  skuName: string
+  skuName: 'Standard_Small' | 'Standard_Medium' | 'Standard_Large' | 'WAF_Medium' | 'WAF_Large' | 'Standard_v2' | 'WAF_v2'
 
   @description('SKU tier')
-  @allowed([
-    'Standard'
-    'WAF'
-    'Standard_v2'
-    'WAF_v2'
-  ])
-  tier: string
+  tier: 'Standard' | 'WAF' | 'Standard_v2' | 'WAF_v2'
 
   @description('Instance count')
   @minValue(1)
@@ -139,12 +110,12 @@ type appGatewaySettings = {
   @description('Minimum capacity when autoscaling is enabled')
   @minValue(0)
   @maxValue(100)
-  minCapacity?: int
+  minCapacity: int?
 
   @description('Maximum capacity when autoscaling is enabled')
   @minValue(1)
   @maxValue(125)
-  maxCapacity?: int
+  maxCapacity: int?
 }
 
 // Parameter using the user-defined types

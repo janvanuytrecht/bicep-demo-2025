@@ -45,4 +45,4 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-01-01' = {
 // Module outputs
 output vnetId string = vnet.id
 output vnetName string = vnet.name
-output subnetIds object = {for subnet in subnets: subnet.name => resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, subnet.name)}
+output subnetIds array = [for subnet in subnets: resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, subnet.name)]
