@@ -59,6 +59,32 @@ What-if output is color-coded and shows:
 - Resources that will be modified (yellow)
 - Resources that will remain unchanged (gray)
 
+Sample output:
+Resource and property changes are indicated with these symbols:
+  + Create
+  ~ Modify
+  - Delete
+  * No effect
+
+The deployment will update the following scope:
+
+Scope: /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/rg-keyvault-demo
+
+  + Microsoft.KeyVault/vaults/kv-abc123 [2023-02-01]
+    location: "westeurope"
+    properties.sku.family: "A"
+    properties.sku.name: "standard"
+    properties.tenantId: "12345678-1234-1234-1234-123456789012"
+    properties.enableRbacAuthorization: true
+    properties.enableSoftDelete: true
+    properties.softDeleteRetentionInDays: 7
+    properties.enabledForTemplateDeployment: true
+    properties.enabledForDeployment: true
+    properties.enabledForDiskEncryption: true
+    tags:
+      environment: "dev"
+      deployedBy: "Azure DevOps"
+
 ## Deployment Commands
 
 Once validated, you can deploy Bicep files using Azure CLI.
