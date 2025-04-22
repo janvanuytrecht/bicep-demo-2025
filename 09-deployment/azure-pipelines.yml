@@ -1,0 +1,52 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  resourceGroupName: 'rg-keyvault-demo'
+  location: 'westeurope'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Bicep Build'
+  inputs:
+    azureSubscription: '$(azureServiceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az bicep build --file key-vault.bicep
+
+- task: AzureCLI@2
+  displayName: 'Bicep Validate'
+  inputs:
+    azureSubscription: '$(azureServiceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment sub validate \
+        --location $(location) \
+        --template-file key-vault.bicep
+
+- task: AzureCLI@2
+  displayName: 'What-If Deployment'
+  inputs:
+    azureSubscription: '$(azureServiceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment sub what-if \
+        --location $(location) \
+        --template-file key-vault.bicep
+
+- task: AzureCLI@2
+  displayName: 'Deploy Key Vault'
+  inputs:
+    azureSubscription: '$(azureServiceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az deployment sub create \
+        --location $(location) \
+        --template-file key-vault.bicep

@@ -182,7 +182,7 @@ resource sqlDb 'Microsoft.Sql/servers/databases@2021-11-01' = {
     capacity: sqlSettings.capacity
   }
   properties: {
-    highAvailabilityReplicas: sqlSettings.highAvailability ? 2 : 0
+    highAvailabilityReplicaCount: sqlSettings.highAvailability ? 2 : 0
   }
 }
 
