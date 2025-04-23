@@ -1,5 +1,6 @@
 // key-vault.bicep
 // Simple Key Vault deployment example
+targetScope = 'subscription'
 
 @description('Location for all resources')
 param location string = 'westeurope'
@@ -8,7 +9,7 @@ param location string = 'westeurope'
 param resourceGroupName string = 'rg-keyvault-demo'
 
 @description('Key Vault name')
-param keyVaultName string = 'kv-${uniqueString(resourceGroup().id)}'
+param keyVaultName string = 'kv-demo-01'
 
 @description('Enable RBAC authorization')
 param enableRbacAuthorization bool = true
@@ -35,7 +36,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
 // Create Key Vault
 module keyVault 'key-vault-module.bicep' = {
   name: 'keyVaultDeployment'
-  scope: rg
+  scope: resourceGroup(resourceGroupName)
   params: {
     keyVaultName: keyVaultName
     location: location

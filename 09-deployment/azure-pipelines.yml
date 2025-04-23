@@ -10,13 +10,23 @@ variables:
 
 steps:
 - task: AzureCLI@2
+  displayName: 'Create Resource Group'
+  inputs:
+    azureSubscription: '$(azureServiceConnection)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az group create --name $(resourceGroupName) --location $(location)
+
+- task: AzureCLI@2
   displayName: 'Bicep Build'
   inputs:
     azureSubscription: '$(azureServiceConnection)'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az bicep build --file key-vault.bicep
+      az bicep build --file 09-deployment/key-vault-module.bicep
+      az bicep build --file 09-deployment/key-vault.bicep
 
 - task: AzureCLI@2
   displayName: 'Bicep Validate'
@@ -27,7 +37,7 @@ steps:
     inlineScript: |
       az deployment sub validate \
         --location $(location) \
-        --template-file key-vault.bicep
+        --template-file 09-deployment/key-vault.bicep
 
 - task: AzureCLI@2
   displayName: 'What-If Deployment'
@@ -38,7 +48,7 @@ steps:
     inlineScript: |
       az deployment sub what-if \
         --location $(location) \
-        --template-file key-vault.bicep
+        --template-file 09-deployment/key-vault.bicep
 
 - task: AzureCLI@2
   displayName: 'Deploy Key Vault'
@@ -49,4 +59,4 @@ steps:
     inlineScript: |
       az deployment sub create \
         --location $(location) \
-        --template-file key-vault.bicep
+        --template-file 09-deployment/key-vault.bicep
