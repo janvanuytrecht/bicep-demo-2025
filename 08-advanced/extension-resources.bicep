@@ -187,7 +187,7 @@ resource storagePolicyAssignment 'Microsoft.Authorization/policyAssignments@2022
   name: 'storage-https-policy'
   scope: storageAccount
   properties: {
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9' // Ensure HTTPS traffic only for storage accounts
+    policyDefinitionId: subscriptionResourceId('Microsoft.Authorization/policyDefinitions', '404c3081-a854-4457-ae30-26a93ef643f9') // Ensure HTTPS traffic only for storage accounts
     displayName: 'Secure transfer to storage accounts should be enabled'
     description: 'Audit requirement of Secure transfer in your storage account. Secure transfer is an option that forces your storage account to accept requests only from secure connections (HTTPS)'
   }

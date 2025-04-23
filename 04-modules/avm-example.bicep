@@ -21,7 +21,7 @@ param keyVaultName string = 'kv-avm-${uniqueString(resourceGroup().id)}'
 @description('The storage account name. Must be globally unique.')
 @minLength(3)
 @maxLength(24)
-param storageAccountName string = 'stavmavm${uniqueString(resourceGroup().id)}'
+param storageAccountName string = 'stavm${uniqueString(resourceGroup().id)}'
 
 @description('The network security group name')
 param networkSecurityGroupName string = 'nsg-avm-${environment}'
@@ -43,13 +43,8 @@ var tags = {
 // Azure Verified Modules Examples
 // ============================================================================
 
-// Using local modules to simulate AVM modules for the example
-// In a real scenario, you would use Azure Verified Modules from the public registry
-// Example: module keyVault 'br/public:avm/res/key-vault/vault:0.4.0' = { ... }
-
-// Key Vault module
-// Based on AVM specifications
-module keyVaultModule 'avm-modules/key-vault.bicep' = {
+// Key Vault module from AVM
+module keyVaultModule 'br/public:avm/res/key-vault/vault:0.4.0' = {
   name: 'avm-keyvault-deployment'
   params: {
     name: keyVaultName
@@ -67,9 +62,8 @@ module keyVaultModule 'avm-modules/key-vault.bicep' = {
   }
 }
 
-// Storage Account module
-// Based on AVM specifications
-module storageAccountModule 'avm-modules/storage-account.bicep' = {
+// Storage Account module from AVM
+module storageAccountModule 'br/public:avm/res/storage/storage-account:0.19.0' = {
   name: 'avm-storage-deployment'
   params: {
     name: storageAccountName
@@ -89,22 +83,23 @@ module storageAccountModule 'avm-modules/storage-account.bicep' = {
       defaultAction: 'Deny'
       bypass: 'AzureServices'
     }
-    blobContainers: [
-      {
-        name: 'data'
-        publicAccess: 'None'
-      }
-      {
-        name: 'logs'
-        publicAccess: 'None'
-      }
-    ]
+    blobServices: {
+      containers: [
+        {
+          name: 'data'
+          publicAccess: 'None'
+        }
+        {
+          name: 'logs'
+          publicAccess: 'None'
+        }
+      ]
+    }
   }
 }
 
-// Network Security Group module
-// Based on AVM specifications
-module networkSecurityGroupModule 'avm-modules/network-security-group.bicep' = {
+// Network Security Group module from AVM
+module networkSecurityGroupModule 'br/public:avm/res/network/network-security-group:0.4.0' = {
   name: 'avm-nsg-deployment'
   params: {
     name: networkSecurityGroupName
@@ -143,9 +138,8 @@ module networkSecurityGroupModule 'avm-modules/network-security-group.bicep' = {
   }
 }
 
-// Virtual Network module
-// Based on AVM specifications
-module virtualNetworkModule 'avm-modules/virtual-network.bicep' = {
+// Virtual Network module from AVM
+module virtualNetworkModule 'br/public:avm/res/network/virtual-network:0.4.0' = {
   name: 'avm-vnet-deployment'
   params: {
     name: virtualNetworkName
@@ -180,7 +174,7 @@ output keyVaultUri string = keyVaultModule.outputs.uri
 
 output storageAccountName string = storageAccountModule.outputs.name
 output storageAccountResourceId string = storageAccountModule.outputs.resourceId
-output storageAccountPrimaryEndpoints object = storageAccountModule.outputs.primaryEndpoints
+output storageAccountPrimaryBlobEndpoint string = storageAccountModule.outputs.primaryBlobEndpoint
 
 output networkSecurityGroupName string = networkSecurityGroupModule.outputs.name
 output networkSecurityGroupResourceId string = networkSecurityGroupModule.outputs.resourceId

@@ -207,59 +207,76 @@ In [network-module-exercise.md](./network-module-exercise.md), you'll find an ex
 
 After mastering modules, move on to [Understanding Scopes](../05-scoping/README.md) to learn more about deployment scopes in Bicep.
 
+## Custom Modules and Azure Verified Modules (AVM)
+
+This section covers both custom module creation and using Azure Verified Modules (AVM) in Bicep.
+
+## Custom Modules
+
+1. **Module Structure**
+   - Input parameters
+   - Resource definitions
+   - Output values
+   - Example: `network-module.bicep`
+
+2. **Module Usage**
+   - Local module references
+   - Parameter passing
+   - Output consumption
+   - Example: `main.bicep`
+
 ## Azure Verified Modules (AVM)
 
-### What are Azure Verified Modules?
+Azure Verified Modules are Microsoft-maintained, production-ready Bicep modules that follow best practices and security standards.
 
-Azure Verified Modules (AVM) are a library of infrastructure-as-code modules maintained by Microsoft and its partners, designed for enterprise deployment of Azure resources. These modules:
+### Key Features
+- Production-ready templates
+- Built-in security and compliance
+- Regular updates and maintenance
+- Comprehensive documentation
+- Community support
 
-- Follow uniform patterns and practices
-- Provide production-ready parameter defaults
-- Are extensively tested
-- Have comprehensive documentation
-- Are maintained and versioned
+### Using AVM Modules
 
-### Benefits of Azure Verified Modules
+1. **Module Reference Format**
+   ```bicep
+   module <name> 'br/public:avm/res/<provider>/<resource>:<version>' = {
+     name: '<deployment-name>'
+     params: {
+       // Module parameters
+     }
+   }
+   ```
 
-- **Consistency**: Standardized implementation across your organization
-- **Compliance**: Built-in security and best practices
-- **Efficiency**: Reduces time spent creating and maintaining modules
-- **Quality**: Thoroughly tested and maintained by Microsoft
-- **Extensibility**: Can be customized while maintaining core functionality
+2. **Available Modules**
+   - Key Vault: `br/public:avm/res/key-vault/vault:1.0.0`
+   - Storage Account: `br/public:avm/res/storage/storage-account:1.0.0`
+   - Network Security Group: `br/public:avm/res/network/network-security-group:1.0.0`
+   - Virtual Network: `br/public:avm/res/network/virtual-network:1.0.0`
 
-### Example of using AVM in Bicep
+3. **Prerequisites**
+   - Latest Bicep CLI installed
+   - Run `bicep restore` to download the modules
+   - Azure subscription with contributor access
 
-We've created an example file `avm-example.bicep` that simulates using Azure Verified Modules. In a real implementation, you would reference modules directly from the Bicep Registry.
+### Example Usage
 
-```bicep
-// Real AVM module reference example
-module keyVault 'br/public:avm/res/key-vault/vault:0.4.0' = {
-  name: 'keyVaultDeployment'
-  params: {
-    name: 'kv-example'
-    // other parameters
-  }
-}
-```
+See `avm-example.bicep` for a complete example using multiple AVM modules.
 
-Our example shows how to use AVM-style modules for:
-- Key Vault
-- Storage Account
-- Network Security Group
-- Virtual Network
+### Benefits of AVM
+- Reduced development time
+- Consistent implementation
+- Security best practices
+- Regular updates
+- Microsoft support
 
-### AVM Module Structure
+### Resources
+- [AVM Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/azure-verified-modules)
+- [AVM GitHub Repository](https://github.com/Azure/bicep-registry-modules)
+- [AVM Module Catalog](https://azure.github.io/bicep-registry-modules/)
 
-The example modules follow AVM patterns such as:
+## Exercises
 
-1. Consistent parameter naming
-2. Comprehensive documentation with @description decorators
-3. Proper output structures
-4. Resource tagging
-5. Use of object parameters for complex settings
-
-### Learn More About AVM
-
-- [Azure Verified Modules](https://aka.ms/avm)
-- [AVM GitHub Repository](https://github.com/Azure/Azure-Verified-Modules)
-- [Bicep Registry Modules](https://aka.ms/BRM)
+1. Create a custom module for a specific resource
+2. Deploy resources using AVM modules
+3. Combine custom and AVM modules in a deployment
